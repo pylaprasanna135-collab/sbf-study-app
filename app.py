@@ -134,7 +134,24 @@ if menu == "🏠 Home":
     st.success(
         "💡 Small progress every day leads to big success!"
     )
+# ---------- HOME ----------
+if menu == "🏠 Home":
 
+    st.title("🚀 SBF")
+    st.subheader("Study Begins for Future")
+
+    st.write("### Learn Today. Build Your Future. 🌟")
+
+    st.divider()
+
+    st.header("👋 Welcome to SBF!")
+
+    st.write("""
+    SBF is a student learning platform.
+    ...
+    """)
+
+    st.success("🚀 Start learning. Start building your future!")
 
 # ==============================
 # COURSES

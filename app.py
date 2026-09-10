@@ -2,12 +2,12 @@ import streamlit as st
 import random
 
 # =========================================================
-# PAGE CONFIGURATION
+# SBF - STUDY BEGINS FOR FUTURE
 # =========================================================
 
 st.set_page_config(
     page_title="SBF | Study Begins for Future",
-    page_icon="📚",
+    page_icon="🚀",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -16,17 +16,14 @@ st.set_page_config(
 # SESSION STATE
 # =========================================================
 
-if "started" not in st.session_state:
-    st.session_state.started = False
-
 if "points" not in st.session_state:
     st.session_state.points = 0
 
+if "completed_lessons" not in st.session_state:
+    st.session_state.completed_lessons = []
+
 if "quiz_score" not in st.session_state:
     st.session_state.quiz_score = 0
-
-if "completed" not in st.session_state:
-    st.session_state.completed = 0
 
 # =========================================================
 # CUSTOM CSS
@@ -35,154 +32,79 @@ if "completed" not in st.session_state:
 st.markdown("""
 <style>
 
-#MainMenu {visibility: hidden;}
-footer {visibility: hidden;}
-header {visibility: hidden;}
+#MainMenu {
+    visibility: hidden;
+}
+
+footer {
+    visibility: hidden;
+}
+
+header {
+    visibility: hidden;
+}
 
 .stApp {
-    background: linear-gradient(135deg, #f7f9fc 0%, #eef3ff 100%);
+    background-color: #f5f7fb;
 }
 
 .block-container {
     padding-top: 2rem;
     padding-bottom: 3rem;
-    max-width: 1400px;
 }
 
-/* Sidebar */
-
-[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #111827 0%, #1e293b 100%);
-}
-
-[data-testid="stSidebar"] * {
-    color: white !important;
-}
-
-.sidebar-title {
-    font-size: 26px;
-    font-weight: 800;
-    text-align: center;
-    margin-bottom: 5px;
-}
-
-.sidebar-subtitle {
-    text-align: center;
-    font-size: 13px;
-    opacity: 0.75;
-    margin-bottom: 30px;
-}
-
-/* Header */
+/* HERO */
 
 .hero {
+    padding: 40px;
+    border-radius: 25px;
     background: linear-gradient(135deg, #4f46e5, #7c3aed);
-    padding: 35px;
-    border-radius: 24px;
     color: white;
-    box-shadow: 0 15px 40px rgba(79,70,229,0.20);
-    margin-bottom: 25px;
+    margin-bottom: 30px;
 }
 
 .hero h1 {
     font-size: 42px;
-    margin: 0;
-    font-weight: 800;
+    margin-bottom: 10px;
 }
 
 .hero p {
-    font-size: 17px;
-    margin-top: 10px;
-    opacity: 0.92;
+    font-size: 18px;
 }
 
-/* Cards */
+/* CARD */
 
 .card {
-    background: white;
+    background-color: white;
     padding: 25px;
-    border-radius: 20px;
-    box-shadow: 0 8px 25px rgba(15,23,42,0.07);
-    border: 1px solid #e5e7eb;
-    min-height: 145px;
-}
-
-.card-icon {
-    font-size: 32px;
-}
-
-.card-title {
-    font-size: 17px;
-    font-weight: 700;
-    margin-top: 10px;
-    color: #111827;
-}
-
-.card-text {
-    color: #64748b;
-    font-size: 14px;
-    margin-top: 6px;
-}
-
-/* Section */
-
-.section-title {
-    font-size: 27px;
-    font-weight: 800;
-    color: #111827;
-    margin-top: 28px;
-    margin-bottom: 18px;
-}
-
-/* Feature */
-
-.feature {
-    background: white;
-    padding: 24px;
     border-radius: 18px;
-    border-left: 5px solid #6366f1;
-    box-shadow: 0 6px 20px rgba(15,23,42,0.06);
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.08);
     margin-bottom: 15px;
 }
 
-.feature h3 {
-    margin: 0;
-    color: #111827;
+.card h3 {
+    margin-bottom: 8px;
 }
 
-.feature p {
-    color: #64748b;
+/* SECTION TITLE */
+
+.section-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 25px;
+    margin-bottom: 20px;
 }
 
-/* Quote */
+/* QUOTE */
 
 .quote {
-    background: linear-gradient(135deg, #fff7ed, #ffedd5);
+    background-color: #fff7ed;
     padding: 25px;
-    border-radius: 20px;
-    margin-top: 25px;
+    border-radius: 18px;
     text-align: center;
     font-size: 18px;
-    font-weight: 600;
-    color: #9a3412;
-}
-
-/* Buttons */
-
-.stButton > button {
-    border-radius: 12px;
-    font-weight: 700;
-    border: none;
-    padding: 10px 20px;
-}
-
-/* Progress */
-
-.progress-box {
-    background: white;
-    padding: 25px;
-    border-radius: 20px;
-    box-shadow: 0 8px 25px rgba(15,23,42,0.07);
+    font-weight: bold;
+    margin-top: 25px;
 }
 
 </style>
@@ -194,215 +116,404 @@ header {visibility: hidden;}
 
 with st.sidebar:
 
-    st.markdown(
-        '<div class="sidebar-title">📚 SBF</div>',
-        unsafe_allow_html=True
-    )
+    st.title("🚀 SBF")
 
-    st.markdown(
-        '<div class="sidebar-subtitle">Study Begins for Future</div>',
-        unsafe_allow_html=True
-    )
+    st.caption("Study Begins for Future")
 
     st.divider()
 
     page = st.radio(
-        "NAVIGATION",
+        "📌 Navigation",
         [
-            "🏠 Dashboard",
-            "📖 Study",
-            "🧠 Quiz",
-            "🎯 Goals",
+            "🏠 Home",
+            "🎓 Explore Courses",
+            "🧠 Take a Quiz",
+            "🧭 Career Guidance",
+            "📊 My Progress",
             "ℹ️ About"
         ]
     )
 
     st.divider()
 
-    st.markdown("### ⭐ Your Progress")
+    st.subheader("⭐ Your Stats")
 
-    st.metric(
-        "Points",
-        st.session_state.points
-    )
-
-    st.metric(
-        "Completed",
-        st.session_state.completed
-    )
+    st.write("🏆 Points:", st.session_state.points)
+    st.write("📚 Completed:", len(st.session_state.completed_lessons))
 
 # =========================================================
-# DASHBOARD
+# HOME PAGE
 # =========================================================
 
-if page == "🏠 Dashboard":
+if page == "🏠 Home":
 
     st.markdown("""
     <div class="hero">
-        <h1>Welcome to SBF 👋</h1>
-        <p>
-            Study smarter. Build skills. Create your future.
-        </p>
+        <h1>🚀 Welcome to SBF</h1>
+        <p>Study Begins for Future</p>
+        <p>Learn Today. Build Your Future. 🌟</p>
     </div>
     """, unsafe_allow_html=True)
 
-    if not st.session_state.started:
+    st.markdown("""
+    <div class="section-title">
+    🚀 Start Learning. Start Building Your Future!
+    </div>
+    """, unsafe_allow_html=True)
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
 
         st.markdown("""
         <div class="card">
-            <div class="card-icon">🚀</div>
-            <div class="card-title">Ready to begin?</div>
-            <div class="card-text">
-                Start your learning journey with SBF.
-            </div>
+        <h3>🎓 Explore Courses</h3>
+        <p>Learn useful skills step by step.</p>
         </div>
         """, unsafe_allow_html=True)
 
-        if st.button("🚀 Start Learning", use_container_width=True):
-            st.session_state.started = True
-            st.session_state.points += 10
-            st.rerun()
+    with col2:
 
-    else:
-
-        st.success("Your learning journey has started! Keep going 💪")
-
-    st.markdown(
-        '<div class="section-title">✨ What You Can Do</div>',
-        unsafe_allow_html=True
-    )
-
-    c1, c2, c3 = st.columns(3)
-
-    with c1:
         st.markdown("""
         <div class="card">
-            <div class="card-icon">📖</div>
-            <div class="card-title">Study</div>
-            <div class="card-text">
-                Learn important concepts in a simple way.
-            </div>
+        <h3>🧠 Take a Quiz</h3>
+        <p>Practice and test your knowledge.</p>
         </div>
         """, unsafe_allow_html=True)
 
-    with c2:
+    with col3:
+
         st.markdown("""
         <div class="card">
-            <div class="card-icon">🧠</div>
-            <div class="card-title">Practice</div>
-            <div class="card-text">
-                Test your knowledge with interactive quizzes.
-            </div>
+        <h3>🧭 Career Guidance</h3>
+        <p>Discover your career opportunities.</p>
         </div>
         """, unsafe_allow_html=True)
-
-    with c3:
-        st.markdown("""
-        <div class="card">
-            <div class="card-icon">🎯</div>
-            <div class="card-title">Improve</div>
-            <div class="card-text">
-                Track your progress and reach your goals.
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    st.markdown(
-        '<div class="section-title">📊 Your Dashboard</div>',
-        unsafe_allow_html=True
-    )
-
-    p1, p2, p3 = st.columns(3)
-
-    with p1:
-        st.metric(
-            "⭐ Points",
-            st.session_state.points
-        )
-
-    with p2:
-        st.metric(
-            "📝 Quiz Score",
-            st.session_state.quiz_score
-        )
-
-    with p3:
-        st.metric(
-            "🏆 Completed",
-            st.session_state.completed
-        )
 
     st.markdown("""
     <div class="quote">
-        💡 "Small progress every day leads to big results."
+    💡 Small progress every day leads to big success!
     </div>
     """, unsafe_allow_html=True)
 
+    st.markdown("### 🌟 Why SBF?")
+
+    st.write("📚 Learn useful skills")
+    st.write("🎯 Discover your talents")
+    st.write("💼 Find career opportunities")
+    st.write("🧭 Get career guidance")
+    st.write("📱 Turn scrolling time into learning time")
+
 # =========================================================
-# STUDY PAGE
+# EXPLORE COURSES
 # =========================================================
 
-elif page == "📖 Study":
+elif page == "🎓 Explore Courses":
 
     st.markdown("""
     <div class="hero">
-        <h1>📖 Study Zone</h1>
-        <p>Learn something new today.</p>
+    <h1>🎓 Explore Courses</h1>
+    <p>Choose a course and start learning.</p>
     </div>
     """, unsafe_allow_html=True)
 
-    subjects = {
-        "🐍 Python": "Programming fundamentals, logic and problem solving.",
-        "🌐 HTML": "Build the structure of modern web pages.",
-        "🗄️ DBMS": "Learn databases, tables, keys and relationships.",
-        "🤖 Artificial Intelligence": "Explore AI concepts and intelligent systems.",
-        "📊 Aptitude": "Improve your mathematical and logical reasoning."
-    }
+    course = st.selectbox(
+        "Choose Your Course",
+        [
+            "Python Programming",
+            "Artificial Intelligence",
+            "Data Science",
+            "Web Development",
+            "DBMS",
+            "Full Stack Development"
+        ]
+    )
 
-    for subject, description in subjects.items():
+    # =====================================================
+    # PYTHON
+    # =====================================================
 
-        st.markdown(f"""
-        <div class="feature">
-            <h3>{subject}</h3>
-            <p>{description}</p>
-        </div>
-        """, unsafe_allow_html=True)
+    if course == "Python Programming":
 
-        if st.button(
-            f"Start {subject}",
-            key=subject,
-            use_container_width=True
-        ):
-            st.session_state.points += 5
-            st.session_state.completed += 1
-            st.success(f"{subject} study session started! +5 points 🎉")
+        st.subheader("🐍 Python Programming")
+
+        lessons = {
+            "1️⃣ Python Basics":
+            "Python is a simple and powerful programming language used for web development, AI, data science and automation.",
+
+            "2️⃣ Variables and Data Types":
+            "Variables store data. Common data types are int, float, string and boolean.",
+
+            "3️⃣ Operators":
+            "Operators perform operations such as addition, subtraction, multiplication and comparison.",
+
+            "4️⃣ Conditions":
+            "Conditions use if, elif and else to make decisions in programs.",
+
+            "5️⃣ Loops":
+            "Loops repeat tasks. Python mainly uses for loops and while loops.",
+
+            "6️⃣ Functions":
+            "Functions are reusable blocks of code that perform a specific task.",
+
+            "7️⃣ OOP":
+            "Object Oriented Programming uses concepts like classes and objects."
+        }
+
+        for lesson, description in lessons.items():
+
+            with st.expander(lesson):
+
+                st.write(description)
+
+                if lesson == "1️⃣ Python Basics":
+
+                    st.code("""
+print("Hello, SBF!")
+""", language="python")
+
+                elif lesson == "2️⃣ Variables and Data Types":
+
+                    st.code("""
+name = "Prasanna"
+age = 19
+
+print(name)
+print(age)
+""", language="python")
+
+                elif lesson == "3️⃣ Operators":
+
+                    st.code("""
+a = 10
+b = 5
+
+print(a + b)
+print(a - b)
+print(a * b)
+""", language="python")
+
+                elif lesson == "4️⃣ Conditions":
+
+                    st.code("""
+age = 18
+
+if age >= 18:
+    print("Eligible")
+else:
+    print("Not Eligible")
+""", language="python")
+
+                elif lesson == "5️⃣ Loops":
+
+                    st.code("""
+for i in range(5):
+    print(i)
+""", language="python")
+
+                elif lesson == "6️⃣ Functions":
+
+                    st.code("""
+def greet():
+    print("Welcome to SBF")
+
+greet()
+""", language="python")
+
+                elif lesson == "7️⃣ OOP":
+
+                    st.code("""
+class Student:
+
+    def __init__(self, name):
+        self.name = name
+
+student = Student("Prasanna")
+
+print(student.name)
+""", language="python")
+
+                if st.button(
+                    "✅ Mark as Completed",
+                    key=lesson
+                ):
+
+                    if lesson not in st.session_state.completed_lessons:
+
+                        st.session_state.completed_lessons.append(lesson)
+
+                        st.session_state.points += 10
+
+                        st.success("Lesson completed! +10 Points 🎉")
+
+                    else:
+
+                        st.info("You already completed this lesson!")
+
+    # =====================================================
+    # ARTIFICIAL INTELLIGENCE
+    # =====================================================
+
+    elif course == "Artificial Intelligence":
+
+        st.subheader("🤖 Artificial Intelligence")
+
+        st.write("### What is Artificial Intelligence?")
+
+        st.write(
+            "Artificial Intelligence, or AI, is the ability of "
+            "machines and computers to perform tasks that normally "
+            "require human intelligence."
+        )
+
+        st.write("### Important AI Topics")
+
+        topics = [
+            "🤖 Introduction to AI",
+            "🧠 Machine Learning",
+            "📊 Data and AI",
+            "🔍 Deep Learning",
+            "💬 Natural Language Processing",
+            "👁️ Computer Vision"
+        ]
+
+        for topic in topics:
+
+            with st.expander(topic):
+
+                st.write(
+                    "Learn the basic concepts and real-world "
+                    "applications of " + topic
+                )
+
+    # =====================================================
+    # DATA SCIENCE
+    # =====================================================
+
+    elif course == "Data Science":
+
+        st.subheader("📊 Data Science")
+
+        topics = [
+            "Introduction to Data Science",
+            "Python for Data Science",
+            "NumPy",
+            "Pandas",
+            "Matplotlib",
+            "Data Visualization"
+        ]
+
+        for topic in topics:
+
+            with st.expander(topic):
+
+                st.write(
+                    topic + " is an important skill in Data Science."
+                )
+
+    # =====================================================
+    # WEB DEVELOPMENT
+    # =====================================================
+
+    elif course == "Web Development":
+
+        st.subheader("🌐 Web Development")
+
+        topics = [
+            "HTML",
+            "CSS",
+            "JavaScript",
+            "Responsive Web Design"
+        ]
+
+        for topic in topics:
+
+            with st.expander(topic):
+
+                st.write(
+                    "Learn " + topic +
+                    " step by step and build websites."
+                )
+
+    # =====================================================
+    # DBMS
+    # =====================================================
+
+    elif course == "DBMS":
+
+        st.subheader("🗄️ Database Management System")
+
+        topics = [
+            "Introduction to DBMS",
+            "Database",
+            "Tables",
+            "Primary Key",
+            "Foreign Key",
+            "SQL",
+            "ER Model"
+        ]
+
+        for topic in topics:
+
+            with st.expander(topic):
+
+                st.write(
+                    topic +
+                    " is an important concept in Database Management Systems."
+                )
+
+    # =====================================================
+    # FULL STACK
+    # =====================================================
+
+    elif course == "Full Stack Development":
+
+        st.subheader("💻 Full Stack Development")
+
+        st.write(
+            "Full Stack Development includes both Frontend "
+            "and Backend development."
+        )
+
+        st.write("### Frontend Skills")
+
+        st.write("HTML")
+        st.write("CSS")
+        st.write("JavaScript")
+
+        st.write("### Backend Skills")
+
+        st.write("Python")
+        st.write("Databases")
+        st.write("APIs")
 
 # =========================================================
-# QUIZ PAGE
+# QUIZ
 # =========================================================
 
-elif page == "🧠 Quiz":
+elif page == "🧠 Take a Quiz":
 
     st.markdown("""
     <div class="hero">
-        <h1>🧠 Quick Quiz</h1>
-        <p>Challenge yourself and improve your knowledge.</p>
+    <h1>🧠 Take a Quiz</h1>
+    <p>Test your knowledge!</p>
     </div>
     """, unsafe_allow_html=True)
 
     questions = [
         {
-            "q": "What does AI stand for?",
+            "question": "What does AI stand for?",
             "options": [
                 "Artificial Intelligence",
                 "Automatic Internet",
                 "Advanced Information",
-                "Applied Innovation"
+                "Applied Intelligence"
             ],
             "answer": "Artificial Intelligence"
         },
+
         {
-            "q": "Which language is widely used for AI?",
+            "question": "Which language is popular for AI?",
             "options": [
                 "Python",
                 "HTML",
@@ -411,60 +522,48 @@ elif page == "🧠 Quiz":
             ],
             "answer": "Python"
         },
+
         {
-            "q": "Which one is a database system?",
-            "options": [
-                "MySQL",
-                "HTML",
-                "Python",
-                "CSS"
-            ],
-            "answer": "MySQL"
-        },
-        {
-            "q": "What does HTML stand for?",
+            "question": "What does HTML stand for?",
             "options": [
                 "HyperText Markup Language",
                 "HighText Machine Language",
-                "Hyper Tool Multi Language",
+                "Hyper Tool Language",
                 "Home Text Markup Language"
             ],
             "answer": "HyperText Markup Language"
         },
+
         {
-            "q": "Which device is known as the brain of a computer?",
+            "question": "Which one is a database?",
             "options": [
-                "CPU",
-                "Keyboard",
-                "Monitor",
-                "Mouse"
+                "MySQL",
+                "HTML",
+                "CSS",
+                "Python"
             ],
-            "answer": "CPU"
+            "answer": "MySQL"
         }
     ]
 
-    if "quiz_question" not in st.session_state:
-        st.session_state.quiz_question = random.choice(questions)
+    if "current_question" not in st.session_state:
 
-    question = st.session_state.quiz_question
+        st.session_state.current_question = random.choice(questions)
 
-    st.markdown(
-        '<div class="section-title">Question</div>',
-        unsafe_allow_html=True
-    )
+    q = st.session_state.current_question
 
-    st.info(question["q"])
+    st.subheader(q["question"])
 
     answer = st.radio(
         "Choose your answer:",
-        question["options"]
+        q["options"]
     )
 
-    if st.button("✅ Submit Answer", use_container_width=True):
+    if st.button("Submit Answer"):
 
-        if answer == question["answer"]:
+        if answer == q["answer"]:
 
-            st.success("🎉 Correct answer!")
+            st.success("🎉 Correct Answer!")
 
             st.session_state.points += 10
             st.session_state.quiz_score += 10
@@ -472,79 +571,125 @@ elif page == "🧠 Quiz":
         else:
 
             st.error(
-                f"❌ Not quite. Correct answer: {question['answer']}"
+                "❌ Wrong Answer! Correct answer is: "
+                + q["answer"]
             )
 
-        st.session_state.quiz_question = random.choice(questions)
-
 # =========================================================
-# GOALS PAGE
+# CAREER GUIDANCE
 # =========================================================
 
-elif page == "🎯 Goals":
+elif page == "🧭 Career Guidance":
 
     st.markdown("""
     <div class="hero">
-        <h1>🎯 Future Goals</h1>
-        <p>Dream big. Learn daily. Build your future.</p>
+    <h1>🧭 Career Guidance</h1>
+    <p>Explore your future opportunities.</p>
     </div>
     """, unsafe_allow_html=True)
 
-    goals = [
-        ("💻", "Become a Skilled Developer"),
-        ("🤖", "Build AI Projects"),
-        ("🌐", "Improve Web Development"),
-        ("🧠", "Strengthen Coding Logic"),
-        ("📚", "Prepare for Competitive Exams"),
-        ("🚀", "Build a Successful Career")
-    ]
+    careers = {
+        "🤖 AI Developer":
+        "Build intelligent applications using Artificial Intelligence.",
 
-    for icon, goal in goals:
+        "💻 Python Developer":
+        "Develop software and applications using Python.",
 
-        st.markdown(f"""
-        <div class="feature">
-            <h3>{icon} {goal}</h3>
-            <p>Keep learning and take one step forward every day.</p>
-        </div>
-        """, unsafe_allow_html=True)
+        "🌐 Web Developer":
+        "Build websites and web applications.",
+
+        "📊 Data Scientist":
+        "Analyze data and discover useful insights.",
+
+        "🛡️ Cyber Security":
+        "Protect computer systems and networks."
+    }
+
+    for career, description in careers.items():
+
+        with st.expander(career):
+
+            st.write(description)
+
+            st.write("### Skills to Learn")
+
+            st.write("✔ Programming")
+            st.write("✔ Problem Solving")
+            st.write("✔ Communication")
+            st.write("✔ Continuous Learning")
 
 # =========================================================
-# ABOUT PAGE
+# MY PROGRESS
+# =========================================================
+
+elif page == "📊 My Progress":
+
+    st.markdown("""
+    <div class="hero">
+    <h1>📊 My Progress</h1>
+    <p>Track your learning journey.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.metric(
+            "⭐ Total Points",
+            st.session_state.points
+        )
+
+    with col2:
+        st.metric(
+            "📚 Lessons Completed",
+            len(st.session_state.completed_lessons)
+        )
+
+    with col3:
+        st.metric(
+            "🧠 Quiz Score",
+            st.session_state.quiz_score
+        )
+
+    st.write("### 📈 Learning Progress")
+
+    progress = min(
+        len(st.session_state.completed_lessons) / 10,
+        1.0
+    )
+
+    st.progress(progress)
+
+    st.write(
+        "Keep learning every day. You are improving! 🚀"
+    )
+
+# =========================================================
+# ABOUT
 # =========================================================
 
 elif page == "ℹ️ About":
 
     st.markdown("""
     <div class="hero">
-        <h1>ℹ️ About SBF</h1>
-        <p>Study Begins for Future</p>
+    <h1>📚 About SBF</h1>
+    <p>Study Begins for Future</p>
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("""
-    <div class="card">
-        <div class="card-icon">📚</div>
-        <div class="card-title">Study Begins for Future</div>
-        <div class="card-text">
-            SBF is a student-focused learning platform designed
-            to make studying simple, interactive and motivating.
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.write("""
+SBF is a student-focused learning platform.
 
-    st.markdown(
-        '<div class="section-title">🌟 Our Vision</div>',
-        unsafe_allow_html=True
-    )
+The goal of SBF is to help students use their free time
+to learn useful skills and build a better future.
 
-    st.write(
-        "To help students learn useful skills, practice regularly "
-        "and confidently prepare for their future."
-    )
+Instead of wasting time scrolling, students can learn,
+practice and discover new opportunities.
+""")
 
     st.markdown("""
     <div class="quote">
-        🚀 Learn Today • Build Tomorrow • Create Your Future
+    🚀 Learn Today. Build Tomorrow. Create Your Future!
     </div>
     """, unsafe_allow_html=True)
 
@@ -552,9 +697,9 @@ elif page == "ℹ️ About":
 # FOOTER
 # =========================================================
 
-st.markdown("---")
+st.divider()
 
 st.markdown(
-    "<center>📚 SBF • Study Begins for Future • Keep Learning 🚀</center>",
+    "<center>🚀 SBF | Study Begins for Future | Keep Learning 🌟</center>",
     unsafe_allow_html=True
 )
